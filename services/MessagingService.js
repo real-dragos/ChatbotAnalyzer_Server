@@ -1,7 +1,8 @@
 let socket = require('socket.io');
 const {performance} = require('perf_hooks');
 
-const nlpService = require('.././services/NLPService');
+const nlpService = require('./NLPService');
+const dbService = require('./DatabaseService');
 
 class MessageService {
 
@@ -27,14 +28,26 @@ class MessageService {
     }
 
     handleMessage(data, client) {
+        console.log(data);
         const startingTime = performance.now();
-        nlpService.getChatbotResponse(data.message, client.id, data.chatbotId, (message, metadata) => {
-            metadata.responseTime = performance.now() - startingTime;
-            const response = {
-                message,
-                metadata
-            }
-            client.emit('message', response);
+        const {message, chatbotId, userId, context} = data;
+        dbService.addMessage(message, chatbotId, userId, (result) =>{
+            nlpService.getChatbotResponse(result, context, client.id, chatbotId, (messageText, metadata) => {
+                metadata.responseTime = performance.now() - startingTime;
+                const message = {
+                    id: '-1',
+                    text: messageText,
+                    ownerId: chatbotId,
+                    timestamp: new Date()
+                }
+                dbService.addMessage(message, chatbotId, userId , (result) => {
+                    const response = {
+                        message: result,
+                        metadata
+                    }
+                    client.emit('message', response);
+                })
+            });
         });
     }
 

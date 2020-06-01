@@ -10,10 +10,10 @@ class NLPService{
         rasa: "5e3e9832bd922e47f4f80692"
     }
 
-    getChatbotResponse(message, clientId, chatbotId, handleResponse){
+    getChatbotResponse(message, context, clientId, chatbotId, handleResponse){
         switch(chatbotId){
             case this.chatbots.custom:
-                customChatbot.getResponse(message, handleResponse);
+                customChatbot.getResponse(message, context, handleResponse);
                 break;
             case this.chatbots.dialogflow:
                 dialogflowChatbot.getResponse(message, clientId)

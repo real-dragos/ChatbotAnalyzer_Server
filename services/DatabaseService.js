@@ -38,12 +38,13 @@ class DatabaseService {
     }
 
 
-    addMessage(message, chatbotId, userId) {
+    addMessage(message, chatbotId, userId, callback) {
         Chatbot.findOne({ _id: chatbotId, 'chats.userId': userId })
             .then((chatbot) => {
                 chatbot.chats[0].messages.push(message);
                 chatbot.save();
-                console.log(message);
+                const [result] = chatbot.chats[0].messages.slice(-1);
+                callback(result)
             });
     }
 }

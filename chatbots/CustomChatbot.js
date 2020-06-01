@@ -13,12 +13,11 @@ class CustomChatbot {
         })
     }
 
-    async getResponse(message, handleResponse) {
+    async getResponse(message, context, handleResponse) {
         try {
             let responseMessage;
             let metadata = {};
-            console.log(message);
-            if (!message.context) {
+            if (!context) {
                 // no context
                 const args = {
                     data: { sentence: message.text },
