@@ -26,7 +26,7 @@ class DatabaseService {
     }
 
     getMessages(chatbotId, userId) {
-        return Chatbot.findOne({ _id: chatbotId, 'chats.userId': userId }, { 'chats.messages': { $slice: -10 } }).select('chats.messages')
+        return Chatbot.findOne({ _id: chatbotId, 'chats.userId': userId }, { 'chats.messages': { $slice: -10 } }).select('messages')
     }
 
     getIntents() {
@@ -43,7 +43,7 @@ class DatabaseService {
             .then((chatbot) => {
                 chatbot.chats[0].messages.push(message);
                 chatbot.save();
-                const [result] = chatbot.chats[0].messages.slice(-1);
+                [result] = chatbot.chats[0].messages.slice(-1);
                 callback(result)
             });
     }

@@ -28,21 +28,22 @@ class MessageService {
     }
 
     handleMessage(data, client) {
-        console.log(data);
         const startingTime = performance.now();
         const {message, chatbotId, userId, context} = data;
-        dbService.addMessage(message, chatbotId, userId, (result) =>{
-            nlpService.getChatbotResponse(result, context, client.id, chatbotId, (messageText, metadata) => {
+        const inputMessage = message;
+        dbService.addMessage(inputMessage, chatbotId, userId, (inputResult) =>{
+            nlpService.getChatbotResponse(inputResult, context, client.id, chatbotId, (messageText, metadata) => {
                 metadata.responseTime = performance.now() - startingTime;
-                const message = {
+                const outputMessage = {
                     id: '-1',
                     text: messageText,
                     ownerId: chatbotId,
                     timestamp: new Date()
                 }
-                dbService.addMessage(message, chatbotId, userId , (result) => {
+                dbService.addMessage(outputMessage, chatbotId, userId , (outputResult) => {
                     const response = {
-                        message: result,
+                        input: inputResult,
+                        output: outputResult,
                         metadata
                     }
                     client.emit('message', response);
