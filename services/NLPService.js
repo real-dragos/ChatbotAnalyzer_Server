@@ -21,7 +21,7 @@ class NLPService{
                 .catch((error) => console.log(error));
                 break;
             case this.chatbots.rasa:
-                handleResponse("Rasa", {});
+                rasaChatbot.getResponse(message, handleResponse);
                 break;
             default:
                 this.noChatbotFoundHandler(handleResponse)

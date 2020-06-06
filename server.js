@@ -4,7 +4,7 @@ const cors = require('cors');
 const messageService = require('./services/MessagingService');
 const dbService = require('./services/DatabaseService');
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5432;
 
 "use strict";
 const app = express();
